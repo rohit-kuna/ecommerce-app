@@ -1,0 +1,37 @@
+
+table product {
+  id bigint pk
+  name varchar
+  price decimal
+  stock_quantity bigint
+}
+
+table orders {
+  id bigint pk
+  user_id bigint [note:"fk"]
+  order_date timestamp
+  status varchar
+  total_amount decimal
+}
+
+table order_item {
+  id bigint pk
+  order_id bigint [note:"fk"]
+  product_id bigint [note:"fk"]
+  unit_name_at_order varchar [note: "duplication necessary to preserve history"]
+  unit_price_at_order decimal [note: "duplication necessary to preserve history"]
+  order_quantity bigint
+  subtotal decimal
+}
+
+table user {
+  id bigint pk
+  name varchar
+  email varchar unique
+  password_hash varchar
+  role varchar
+}
+
+Ref: user.id < orders.user_id
+Ref: orders.id < order_item.order_id
+Ref: product.id < order_item.product_id
